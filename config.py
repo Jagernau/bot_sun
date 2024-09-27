@@ -1,13 +1,15 @@
-from dotenv import dotenv_values
+from os import environ as envi
+from dotenv import load_dotenv
 
-config = dotenv_values(".env")
+load_dotenv()
 
-TOKEN=config['TOKEN']
 
-DB_HOST=config['DB_HOST']
-MYSQL_USER=config['MYSQL_USER']
-MYSQL_DB_NAME=config['MYSQL_DB_NAME']
-MYSQL_PASSWORD=config['MYSQL_PASSWORD']
-MYSQL_PORT=config['MYSQL_PORT']
+TOKEN=envi.get('TOKEN')
+
+DB_HOST=envi.get('DB_HOST')
+MYSQL_USER=envi.get('MYSQL_USER')
+MYSQL_DB_NAME=envi.get('MYSQL_DB_NAME')
+MYSQL_PASSWORD=envi.get('MYSQL_PASSWORD')
+MYSQL_PORT=envi.get('MYSQL_PORT')
 
 connection_mysql = f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{DB_HOST}:{MYSQL_PORT}/{MYSQL_DB_NAME}"
