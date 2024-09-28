@@ -16,12 +16,9 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 # ID группы, куда будут отправляться сообщения
-GROUP_ID = -1001234567890  # Замените на ваш ID группы
+GROUP_ID = config.GROUP_ID  # Замените на ваш ID группы
 
 async def send_morning_message():
-    """ 
-    Функция для отправки сообщения "Доброе утро"
-    """
     while True:
         now = datetime.now()
         if now.hour == 8 and now.minute == 0:  # Время отправки "Доброе утро"
@@ -30,9 +27,6 @@ async def send_morning_message():
         await asyncio.sleep(30)  # Проверяем каждые 30 секунд
 
 async def send_night_message():
-    """
-    Функция для отправки сообщения "Спокойной ночи"
-    """
     while True:
         now = datetime.now()
         if now.hour == 22 and now.minute == 0:  # Время отправки "Спокойной ночи"

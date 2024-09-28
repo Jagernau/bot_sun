@@ -1,6 +1,6 @@
 FROM python:3.10
-COPY . /system_monitorin_connect
-WORKDIR /system_monitorin_connect
+COPY . /bot_sun
+WORKDIR /bot_sun
 
 ENV TOKEN=${TOKEN}
 ENV GROUP_ID=${GROUP_ID}
