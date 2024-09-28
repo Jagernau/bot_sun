@@ -4,7 +4,7 @@ networks:
     driver: bridge
 
 services:
-  web:
+  bot:
     build:
       context: .
       
