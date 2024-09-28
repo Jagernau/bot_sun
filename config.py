@@ -5,7 +5,7 @@ load_dotenv()
 
 
 TOKEN=envi.get('TOKEN')
-
+GROUP_ID=envi.get('GROUP_ID')
 DB_HOST=envi.get('DB_HOST')
 MYSQL_USER=envi.get('MYSQL_USER')
 MYSQL_DB_NAME=envi.get('MYSQL_DB_NAME')
