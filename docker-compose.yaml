@@ -1,0 +1,28 @@
+version: '3.9'
+networks:
+  bot_network:
+    driver: bridge
+
+services:
+  web:
+    build:
+      context: .
+      
+    environment:
+      TOKEN: ${TOKEN}
+      GROUP_ID: ${GROUP_ID}
+      DB_HOST: ${DB_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DB_NAME: ${MYSQL_DB_NAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
+      API_TOKEN: ${API_TOKEN}
+    command: python bot.py
+    networks:
+      - bot_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+
