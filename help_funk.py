@@ -19,8 +19,9 @@ def create_excel_file(data, file_name):
 
     df = pd.DataFrame(data, columns=[
 
-        "old_value",
-        "new_value",
+        "Контрагент",
+        "Система мониторинга",
+        "Имя объекта"
 
         ])
     excel_writer = StyleFrame.ExcelWriter(f'{directory}/{file_name}.xls')

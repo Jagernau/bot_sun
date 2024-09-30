@@ -11,10 +11,13 @@ def get_log_obj(date_start, date_end):
     db = MysqlDatabase()
     session = db.session
     result = session.query(
-            models.GlobalLogging.old_value, 
-            models.GlobalLogging.new_value
+            models.GlobalLogging.contragent_id,
+            models.GlobalLogging.sys_id,
+            models.GlobalLogging.new_value,
                            ).filter(
-                models.GlobalLogging.change_time.between(date_start, date_end)
+                models.GlobalLogging.change_time.between(date_start, date_end),
+                models.GlobalLogging.section_type=="object",
+                models.GlobalLogging.action=="add",
             ).all()
     session.close()
     return result
