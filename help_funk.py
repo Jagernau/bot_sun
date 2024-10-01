@@ -26,5 +26,8 @@ def create_excel_file(data, file_name):
         ])
     excel_writer = StyleFrame.ExcelWriter(f'{directory}/{file_name}.xls')
     sf = StyleFrame(df)
+    sf.set_column_width('Контрагент', 30)
+    sf.set_column_width("Система мониторинга", 10)
+    sf.set_column_width("Имя объекта", 30)
     sf.to_excel(excel_writer=excel_writer)
     excel_writer._save()
