@@ -37,7 +37,7 @@ def send_add_obj_yesterday_message():
 def send_add_obj_month_message():
     bot.send_message(GROUP_ID, 'Отчёт по добавленным объектам за месяц')
 
-schedule.every().day.at("09:15").do(send_add_obj_yesterday_message)
+schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 #schedule.every().day.at("22:00").do(send_night_message)
 
 while True:
