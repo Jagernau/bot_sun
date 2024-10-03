@@ -24,7 +24,7 @@ def send_add_obj_yesterday_message():
 
     clear_yea = datetime.now() - timedelta(days=1)
     data_db = crud.get_log_obj(
-            f'{clear_yea.replace(hour=15, minute=0, second=0, microsecond=0)}',
+            f'{clear_yea.replace(hour=12, minute=0, second=0, microsecond=0)}',
             f'{datetime.now() + timedelta(days=1)}'
             )
 
@@ -39,6 +39,7 @@ def send_add_obj_month_message():
 
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 #schedule.every().day.at("22:00").do(send_night_message)
+
 
 while True:
     schedule.run_pending()
