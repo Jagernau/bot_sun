@@ -19,19 +19,20 @@ FILES_DIR = 'files'
 
 def send_add_obj_yesterday_message():
     yesterday = hf.get_yesterday()
-    bot.send_message(GROUP_ID, f'Отчёт по добавленным объектам за {yesterday}')
-    filename = f"объекты добавленные {yesterday}"
+    filename = f"Объекты добавленные за {yesterday}"
+    yesterday_with_fix_time = str(yesterday) + " 12:41:04"
+    evening_time = datetime.now() + timedelta(days=1)
 
-    clear_yea = datetime.now() - timedelta(days=1)
     data_db = crud.get_log_obj(
-            f'{clear_yea.replace(hour=12, minute=0, second=0, microsecond=0)}',
-            f'{datetime.now() + timedelta(days=1)}'
+            f'{yesterday_with_fix_time}',
+            f'{evening_time}'
             )
 
     hf.create_excel_file(data_db, filename)
 
     bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename}.xls', 'rb'))
 
+    bot.send_message(GROUP_ID, f'{filename}')
 
 
 def send_add_obj_week_message():
@@ -44,6 +45,7 @@ def send_add_obj_week_message():
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 #schedule.every().day.at("22:00").do(send_night_message)
 
+#send_add_obj_yesterday_message()
 
 while True:
     schedule.run_pending()
