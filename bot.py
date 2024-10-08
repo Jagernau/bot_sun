@@ -18,12 +18,15 @@ bot = Bot(token=str(TOKEN))
 FILES_DIR = 'files'
 
 def send_add_obj_yesterday_message():
+    """ 
+    Добавленные объекты за предыдущий день
+    """
     yesterday = hf.get_yesterday()
     filename = f"Объекты добавленные за {yesterday}"
     yesterday_with_fix_time = str(yesterday) + " 12:41:04"
     evening_time = datetime.now() + timedelta(days=1)
 
-    data_db = crud.get_log_obj(
+    data_db = crud.get_add_obj(
             f'{yesterday_with_fix_time}',
             f'{evening_time}'
             )
@@ -62,21 +65,35 @@ def send_del_stop_obj_yesterday_message():
         pass
 
 
-def send_add_obj_week_message():
+def send_add_dell_stop_obj_week_message():
+    """ 
+    Отчёт за предыдущую неделю
+    по добавленным и удалённым и приостановленным
+    """
+    today = datetime.now()
+    start_of_week = str(today - timedelta(days=today.weekday() + 7))
+    file_name = f"Отчёт за неделю от {str(start_of_week).split(' ')[0]} до {str(today).split(' ')[0]}"
 
-    curent_date = datetime.now()
-    current_week = None
+    week_data = crud.get_week_monitoring_data(start_of_week, today)
 
-    bot.send_message(GROUP_ID, 'Отчёт по добавленным объектам за неделю\n')
+    if len(week_data) >= 1:
+
+        hf.week_report(week_data, file_name)
+
+        bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{file_name}.xls', 'rb'))
+
+        bot.send_message(GROUP_ID, f'{file_name}')
+    else:
+        pass
+
 
 
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 schedule.every().day.at("09:27").do(send_del_stop_obj_yesterday_message)
-
-# send_add_obj_yesterday_message()
-# send_del_stop_obj_yesterday_message()
+schedule.every().friday.at("09:30").do(send_add_dell_stop_obj_week_message)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
+
 
