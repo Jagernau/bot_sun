@@ -46,13 +46,25 @@ def week_report(data, file_name):
 
     df = pd.DataFrame.from_dict(data, orient='index')
     df.reset_index(inplace=True)
-    df.columns = ['Система мониторинга', 'Добавленные', 'Удалённые']
+    df.columns = ['Система мониторинга', 'Добавленные', 'Удалённые и блокированные']
+    df['ДИНАМИКА'] = df['Добавленные'] - df['Удалённые и блокированные']
+    total_dynamic = df['ДИНАМИКА'].sum()
+    total_row = pd.DataFrame({
+        'Система мониторинга': ['Итого'],
+        'Добавленные': [df['Добавленные'].sum()],
+        'Удалённые и блокированные': [df['Удалённые и блокированные'].sum()],
+        'ДИНАМИКА': [total_dynamic]
+    })
+    df = pd.concat([df, total_row], ignore_index=True)
+
+
 
     excel_writer = StyleFrame.ExcelWriter(f'{directory}/{file_name}.xls')
     sf = StyleFrame(df)
     sf.set_column_width('Система мониторинга', 20)
-    sf.set_column_width("Добавленные", 10)
-    sf.set_column_width("Удалённые", 10)
+    sf.set_column_width("Добавленные", 18)
+    sf.set_column_width("Удалённые и блокированные", 20)
+    sf.set_column_width("ДИНАМИКА", 15)
     sf.to_excel(excel_writer=excel_writer)
     excel_writer._save()
 

@@ -87,10 +87,34 @@ def send_add_dell_stop_obj_week_message():
         pass
 
 
+def send_monthly_report():
+    """ 
+    Отчёт за предыдущий месяц по добавленным и удалённым объектам
+    """
+    today = datetime.now()
+    if today.day == 1:
+        first_day_of_current_month = today.replace(day=1)
+        last_day_of_last_month = first_day_of_current_month - timedelta(days=1)
+        first_day_of_last_month = last_day_of_last_month.replace(day=1)
+
+        filename = f"Отчёт за месяц с {first_day_of_last_month.date()} по {today.date()}"
+
+        # Получаем данные за предыдущий месяц
+        monthly_data = crud.get_week_monitoring_data(first_day_of_last_month, today)
+        if len(monthly_data) >= 1:
+            hf.week_report(monthly_data, filename)
+            bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename}.xls', 'rb'))
+            bot.send_message(GROUP_ID, f'{filename}')
+        else:
+            pass
+    else:
+        pass
+
 
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 schedule.every().day.at("09:27").do(send_del_stop_obj_yesterday_message)
 schedule.every().friday.at("09:30").do(send_add_dell_stop_obj_week_message)
+schedule.every().day.at("09:40").do(send_monthly_report)
 
 while True:
     schedule.run_pending()
