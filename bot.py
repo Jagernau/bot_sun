@@ -72,19 +72,51 @@ def send_add_dell_stop_obj_week_message():
     """
     today = datetime.now()
     start_of_week = str(today - timedelta(days=today.weekday() + 7))
-    file_name = f"Отчёт за неделю от {str(start_of_week).split(' ')[0]} до {str(today).split(' ')[0]}"
 
-    week_data = crud.get_week_monitoring_data(start_of_week, today)
 
-    if len(week_data) >= 1:
+    filename_clear = f"Отчёт за неделю по местам с {start_of_week} по {today.date()}"
+    filename_abon = f"Отчёт за неделю по абонентским местам с {start_of_week} по {today.date()}"
+    filename_count = f"Количество объектов на {today.date()}"
 
-        hf.week_report(week_data, file_name)
+    # Получаем данные за предыдущий месяц
+    week_data_clear = crud.get_week_monitoring_data(start_of_week, today)
+    week_data_abon = crud.get_week_monitoring_abon_data(start_of_week, today)
+    all_obj = crud.get_count_all_obj()
 
-        bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{file_name}.xls', 'rb'))
+    if len(week_data_clear) >= 1:
+        hf.week_report(week_data_clear, filename_clear)
+        bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_clear}.xls', 'rb'))
+        bot.send_message(GROUP_ID, f'{filename_clear}')
+        time.sleep(1)
 
-        bot.send_message(GROUP_ID, f'{file_name}')
+        hf.week_abon_report(week_data_abon, filename_abon)
+        bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_abon}.xls', 'rb'))
+        bot.send_message(GROUP_ID, f'{filename_abon}')
+        time.sleep(1)
+
+        hf.report_all_obj(all_obj, filename_count)
+        bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_count}.xls', 'rb'))
+        bot.send_message(GROUP_ID, f'{filename_count}')
+        time.sleep(1)
+
     else:
         pass
+
+
+
+    # file_name = f"Отчёт за неделю от {str(start_of_week).split(' ')[0]} до {str(today).split(' ')[0]}"
+    #
+    # week_data = crud.get_week_monitoring_data(start_of_week, today)
+    #
+    # if len(week_data) >= 1:
+    #
+    #     hf.week_report(week_data, file_name)
+    #
+    #     bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{file_name}.xls', 'rb'))
+    #
+    #     bot.send_message(GROUP_ID, f'{file_name}')
+    # else:
+    #     pass
 
 
 def send_monthly_report():
@@ -97,16 +129,37 @@ def send_monthly_report():
         last_day_of_last_month = first_day_of_current_month - timedelta(days=1)
         first_day_of_last_month = last_day_of_last_month.replace(day=1)
 
-        filename = f"Отчёт за месяц с {first_day_of_last_month.date()} по {today.date()}"
+        filename_clear = f"Отчёт за месяц по местам с {first_day_of_last_month.date()} по {today.date()}"
+        filename_abon = f"Отчёт за месяц по абонентским местам с {first_day_of_last_month.date()} по {today.date()}"
+
+        filename_count = f"Количество объектов на {today.date()}"
+
 
         # Получаем данные за предыдущий месяц
-        monthly_data = crud.get_week_monitoring_data(first_day_of_last_month, today)
-        if len(monthly_data) >= 1:
-            hf.week_report(monthly_data, filename)
-            bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename}.xls', 'rb'))
-            bot.send_message(GROUP_ID, f'{filename}')
+        monthly_data_clear = crud.get_week_monitoring_data(first_day_of_last_month, today)
+        monthly_data_abon = crud.get_week_monitoring_abon_data(first_day_of_last_month, today)
+        all_obj = crud.get_count_all_obj()
+
+        if len(monthly_data_clear) >= 1:
+            hf.week_report(monthly_data_clear, filename_clear)
+            bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_clear}.xls', 'rb'))
+            bot.send_message(GROUP_ID, f'{filename_clear}')
+            time.sleep(1)
+
+            hf.week_abon_report(monthly_data_abon, filename_abon)
+            bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_abon}.xls', 'rb'))
+            bot.send_message(GROUP_ID, f'{filename_abon}')
+            time.sleep(1)
+
+            hf.report_all_obj(all_obj, filename_count)
+            bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_count}.xls', 'rb'))
+            bot.send_message(GROUP_ID, f'{filename_count}')
+            time.sleep(1)
+
+
         else:
             pass
+
     else:
         pass
 
