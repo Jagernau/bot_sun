@@ -23,7 +23,7 @@ def send_add_obj_yesterday_message():
     """
     yesterday = hf.get_yesterday()
     filename = f"Объекты добавленные за {yesterday}"
-    yesterday_with_fix_time = str(yesterday) + " 12:41:04"
+    yesterday_with_fix_time = str(yesterday) + " 15:41:04"
     evening_time = datetime.now() + timedelta(days=1)
 
     data_db = crud.get_add_obj(
@@ -46,8 +46,12 @@ def send_del_stop_obj_yesterday_message():
     """
     yesterday = hf.get_yesterday()
     filename = f"Объекты удалённые и приостановленные за {yesterday}"
-    yesterday_with_fix_time = str(yesterday) + " 12:41:04"
+    yesterday_with_fix_time = str(yesterday) + " 15:41:04"
     evening_time = datetime.now() + timedelta(days=1)
+
+    filename_count = f"Количество объектов на {datetime.now().date()}"
+
+    all_obj = crud.get_count_all_obj()
 
     data_db = crud.get_del_stop_obj(
             f'{yesterday_with_fix_time}',
@@ -57,10 +61,14 @@ def send_del_stop_obj_yesterday_message():
     if len(data_db) >= 1:
 
         hf.create_excel_file(data_db, filename)
-
         bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename}.xls', 'rb'))
-
         bot.send_message(GROUP_ID, f'{filename}')
+
+        hf.report_all_obj(all_obj, filename_count)
+        bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{filename_count}.xls', 'rb'))
+        bot.send_message(GROUP_ID, f'{filename_count}')
+        time.sleep(1)
+
     else:
         pass
 

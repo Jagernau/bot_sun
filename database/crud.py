@@ -39,7 +39,7 @@ def get_del_stop_obj(date_start, date_end):
     result = session.query(
             models.Contragent.ca_name,
             models.MonitoringSystem.mon_sys_name,
-            models.GlobalLogging.old_value,
+            models.GlobalLogging.new_value,
                            ).outerjoin(
                 models.Contragent, models.GlobalLogging.contragent_id == models.Contragent.ca_id
                 ).outerjoin(
@@ -275,6 +275,8 @@ def get_count_all_obj():
             models.CaObject,
             models.CaObject.sys_mon_id == models.MonitoringSystem.mon_sys_id
         )
+        .filter(
+            models.CaObject.object_status != 7)
         .group_by(models.MonitoringSystem.mon_sys_name)
         .all()
     )
