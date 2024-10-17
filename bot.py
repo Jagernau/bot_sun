@@ -5,7 +5,6 @@ import config
 import database.crud as crud
 import help_funk as hf
 
-import os
 
 from datetime import datetime, timedelta
 
@@ -112,21 +111,6 @@ def send_add_dell_stop_obj_week_message():
 
 
 
-    # file_name = f"Отчёт за неделю от {str(start_of_week).split(' ')[0]} до {str(today).split(' ')[0]}"
-    #
-    # week_data = crud.get_week_monitoring_data(start_of_week, today)
-    #
-    # if len(week_data) >= 1:
-    #
-    #     hf.week_report(week_data, file_name)
-    #
-    #     bot.send_document(GROUP_ID, open(f'{FILES_DIR}/{file_name}.xls', 'rb'))
-    #
-    #     bot.send_message(GROUP_ID, f'{file_name}')
-    # else:
-    #     pass
-
-
 def send_monthly_report():
     """ 
     Отчёт за предыдущий месяц по добавленным и удалённым объектам
@@ -170,7 +154,6 @@ def send_monthly_report():
 
     else:
         pass
-
 
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 schedule.every().day.at("09:27").do(send_del_stop_obj_yesterday_message)

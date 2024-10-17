@@ -120,9 +120,16 @@ def report_all_obj(data, file_name):
         "Количество объектов"
 
         ])
+
+    total_row = pd.DataFrame({
+        'Система мониторинга': ['Итого'],
+        "Количество объектов": [df["Количество объектов"].sum()],
+    })
+    df = pd.concat([df, total_row], ignore_index=True)
+
     excel_writer = StyleFrame.ExcelWriter(f'{directory}/{file_name}.xls')
     sf = StyleFrame(df)
-    sf.set_column_width("Система мониторинга", 10)
+    sf.set_column_width("Система мониторинга", 30)
     sf.set_column_width("Количество объектов", 30)
     sf.to_excel(excel_writer=excel_writer)
     excel_writer._save()
