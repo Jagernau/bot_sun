@@ -157,7 +157,7 @@ def send_monthly_report():
 
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 schedule.every().day.at("09:27").do(send_del_stop_obj_yesterday_message)
-schedule.every().friday.at("09:30").do(send_add_dell_stop_obj_week_message)
+schedule.every().monday.at("09:30").do(send_add_dell_stop_obj_week_message)
 schedule.every().day.at("09:40").do(send_monthly_report)
 
 while True:
