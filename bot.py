@@ -23,7 +23,7 @@ def send_add_obj_yesterday_message():
     yesterday = hf.get_yesterday()
     filename = f"Объекты добавленные за {yesterday}"
     yesterday_with_fix_time = str(yesterday) + " 15:41:04"
-    evening_time = datetime.now() + timedelta(days=1)
+    evening_time = datetime.now()
 
     data_db = crud.get_add_obj(
             f'{yesterday_with_fix_time}',
@@ -46,7 +46,7 @@ def send_del_stop_obj_yesterday_message():
     yesterday = hf.get_yesterday()
     filename = f"Объекты удалённые и приостановленные за {yesterday}"
     yesterday_with_fix_time = str(yesterday) + " 15:41:04"
-    evening_time = datetime.now() + timedelta(days=1)
+    evening_time = datetime.now()
 
     filename_count = f"Количество объектов на {datetime.now().date()}"
 
@@ -154,6 +154,7 @@ def send_monthly_report():
 
     else:
         pass
+
 
 schedule.every().day.at("09:26").do(send_add_obj_yesterday_message)
 schedule.every().day.at("09:27").do(send_del_stop_obj_yesterday_message)

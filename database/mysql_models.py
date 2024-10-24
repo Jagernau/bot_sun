@@ -107,7 +107,8 @@ class GlobalLogging(Base):
     change_time = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     sys_id = Column(Integer, comment='Система мониторинга')
     action = Column(VARCHAR(100), comment='добавление, изменение или удаление')
-    contragent_id = Column(Integer, comment='Система мониторинга')
+    contragent_id = Column(Integer, comment='логгирование контрагента')
+
 
 class GuaranteeTerm(Base):
     __tablename__ = 'guarantee_terms'
@@ -304,6 +305,7 @@ class Contragent(Base):
     phone = Column(VARCHAR(200), comment='Телефон ')
     ca_uid_contragent = Column(String(100, 'utf8mb3_unicode_ci'), comment='УникальныйИдентификаторКонтрагента')
     ca_name_contragent = Column(String(255, 'utf8mb3_unicode_ci'), comment='НаименованиеКонтрагента')
+    service_manager = Column(String(100, 'utf8mb3_unicode_ci'), comment='Имя прикреплённого менеджера тех поддержки')
 
     ca_holding = relationship('Holding')
 
@@ -422,7 +424,7 @@ class LoginUser(Base):
     contragent_id = Column(ForeignKey('Contragents.ca_id', ondelete='SET NULL', onupdate='RESTRICT'), index=True, comment='ID контрагента')
     comment_field = Column(String(270, 'utf8mb3_unicode_ci'), comment='Поле с комментариями')
     ca_uid = Column(VARCHAR(100), comment='Уникальный id контрагента')
-    account_status = Column(TINYINT, nullable=False, server_default=text("'1'"), comment='Состояние учётки 0-остановлена, 1-не подтверждена но активна, 2-подтверждена и активна')
+    account_status = Column(TINYINT, nullable=False, server_default=text("'1'"), comment='Состояние учётки 0-остановлена, 1-не подтверждена но активна, 2-подтверждена и активна 3 -тестовая')
 
     contragent = relationship('Contragent')
     system = relationship('MonitoringSystem')
@@ -548,6 +550,7 @@ class Device(Base):
     contragent_id = Column(ForeignKey('Contragents.ca_id', ondelete='RESTRICT', onupdate='RESTRICT'), index=True, comment='ID контрагента')
     coment = Column(String(270, 'utf8mb3_unicode_ci'), comment='Коментарии')
     itprogrammer_id = Column(ForeignKey('auth_user.id', ondelete='RESTRICT', onupdate='RESTRICT'), index=True, comment='ссылается к программистам')
+    device_owner = Column(TINYINT, comment='Принадлежность терминала:\\r\\n--1 МЫ\\r\\n--0 Клиент')
 
     contragent = relationship('Contragent')
     devices_brand = relationship('DevicesBrand')

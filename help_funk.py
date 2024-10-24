@@ -24,7 +24,8 @@ def create_excel_file(data, file_name):
 
         "Контрагент",
         "Система мониторинга",
-        "Имя объекта"
+        "Имя объекта",
+        "Сервисный менеджер"
 
         ])
     excel_writer = StyleFrame.ExcelWriter(f'{directory}/{file_name}.xls')
@@ -32,6 +33,7 @@ def create_excel_file(data, file_name):
     sf.set_column_width('Контрагент', 30)
     sf.set_column_width("Система мониторинга", 10)
     sf.set_column_width("Имя объекта", 30)
+    sf.set_column_width("Сервисный менеджер", 30)
     sf.to_excel(excel_writer=excel_writer)
     excel_writer._save()
 
@@ -116,21 +118,43 @@ def report_all_obj(data, file_name):
 
     df = pd.DataFrame(data, columns=[
 
-        "Система мониторинга",
-        "Количество объектов"
+        "Сист.Мон.",
+        "Лицен.",
+        "Абон.",
+
+        "Новы.",
+        "Тест.",
+        "Приос.",
+        "Репрог.",
+        "Перев.",
 
         ])
 
     total_row = pd.DataFrame({
-        'Система мониторинга': ['Итого'],
-        "Количество объектов": [df["Количество объектов"].sum()],
+        'Сист.Мон.': ['Итого'],
+        "Лицен.": [df["Лицен."].sum()],
+        "Абон.": [df["Абон."].sum()],
+
+        "Новы.": [df["Новы."].sum()],
+        "Тест.": [df["Тест."].sum()],
+        "Приос.": [df["Приос."].sum()],
+        "Репрог.": [df["Репрог."].sum()],
+        "Перев.": [df["Перев."].sum()],
+
     })
     df = pd.concat([df, total_row], ignore_index=True)
 
     excel_writer = StyleFrame.ExcelWriter(f'{directory}/{file_name}.xls')
     sf = StyleFrame(df)
-    sf.set_column_width("Система мониторинга", 30)
-    sf.set_column_width("Количество объектов", 30)
+    sf.set_column_width("Сист.Мон.", 15)
+    sf.set_column_width("Лицен.", 10)
+    sf.set_column_width("Абон.", 10)
+
+    sf.set_column_width("Новы.", 10)
+    sf.set_column_width("Тест.", 10)
+    sf.set_column_width("Приос.", 10)
+    sf.set_column_width("Репрог.", 10)
+    sf.set_column_width("Перев.", 10)
     sf.to_excel(excel_writer=excel_writer)
     excel_writer._save()
 

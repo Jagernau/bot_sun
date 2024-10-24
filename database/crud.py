@@ -15,11 +15,12 @@ def get_add_obj(date_start, date_end):
             models.Contragent.ca_name,
             models.MonitoringSystem.mon_sys_name,
             models.GlobalLogging.new_value,
-                           ).outerjoin(
-                models.Contragent, models.GlobalLogging.contragent_id == models.Contragent.ca_id
+            models.Contragent.service_manager
                 ).outerjoin(
-                        models.MonitoringSystem, models.GlobalLogging.sys_id == models.MonitoringSystem.mon_sys_id
-                        ).filter(
+                    models.Contragent, models.GlobalLogging.contragent_id == models.Contragent.ca_id
+                ).outerjoin(
+                    models.MonitoringSystem, models.GlobalLogging.sys_id == models.MonitoringSystem.mon_sys_id
+            ).filter(
                 models.GlobalLogging.change_time.between(date_start, date_end),
                 models.GlobalLogging.section_type=="object",
                 models.GlobalLogging.action=="add",
@@ -44,7 +45,8 @@ def get_del_stop_obj(date_start, date_end):
                     (models.GlobalLogging.new_value == '0', models.GlobalLogging.old_value)
                 ],
                 else_=models.GlobalLogging.new_value
-                ).label("value")
+                ).label("value"),
+            models.Contragent.service_manager
             ).outerjoin(
                 models.Contragent, models.GlobalLogging.contragent_id == models.Contragent.ca_id
             ).outerjoin(
@@ -274,7 +276,27 @@ def get_count_all_obj():
     result = (
         session.query(
             models.MonitoringSystem.mon_sys_name,
-            func.count(models.CaObject.sys_mon_id).label('count')
+            func.count(models.CaObject.sys_mon_id).label('count'),
+
+            func.sum(case([(models.CaObject.object_status == 3,1)],
+                          else_=0)).label('abon_firm_terminals'),
+
+            func.sum(case([(models.CaObject.object_status == 1,1)],
+                          else_=0)).label('new_terminals'),
+
+            func.sum(case([(models.CaObject.object_status == 2,1)],
+                          else_=0)).label('test_terminals'),
+
+            func.sum(case([(models.CaObject.object_status == 5,1)],
+                          else_=0)).label('priost_terminals'),
+
+            func.sum(case([(models.CaObject.object_status == 4,1)],
+                          else_=0)).label('reprog_terminals'),
+
+            func.sum(case([(models.CaObject.object_status == 6,1)],
+                          else_=0)).label('retrans_terminals'),
+
+
         )
         .join(
             models.CaObject,
